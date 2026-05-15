@@ -1,11 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import { fetchAres, type CompanyData } from "@/lib/ares";
 import { getDb, saveDb } from "@/db/client";
 import { getCachedAres, saveAresCache } from "@/db/queries";
+import { buildAddressQuery } from "@/lib/address";
 import CompanyCard from "./CompanyCard";
 import SourceBadge, { type DataSource } from "./SourceBadge";
+
+const FirmaMap = dynamic(() => import("./FirmaMap"), { ssr: false });
 
 type LoadStatus = "loading" | "ok" | "notfound" | "error";
 
@@ -82,13 +86,18 @@ export default function CompanyDetail({ ico }: { ico: string }) {
 
   if (!data) return null;
 
+  const addressQuery = buildAddressQuery(data.address);
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-        <span>ARES data:</span>
-        <SourceBadge source={source} />
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+          <span>ARES data:</span>
+          <SourceBadge source={source} />
+        </div>
+        <CompanyCard data={data} />
       </div>
-      <CompanyCard data={data} />
+      {addressQuery && <FirmaMap address={addressQuery} />}
     </div>
   );
 }
