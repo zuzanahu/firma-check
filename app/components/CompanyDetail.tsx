@@ -2,33 +2,57 @@
 
 import { useEffect, useState } from "react";
 import { fetchAres, type CompanyData } from "@/lib/ares";
+import { getDb, saveDb } from "@/db/client";
+import { getCachedAres, saveAresCache } from "@/db/queries";
 import CompanyCard from "./CompanyCard";
+import SourceBadge, { type DataSource } from "./SourceBadge";
 
 type LoadStatus = "loading" | "ok" | "notfound" | "error";
 
 /**
  * Client island that fetches and displays ARES data for a given IČO.
+ * Checks the local SQLite cache before calling the network.
  *
  * @param ico - Normalized 8-digit IČO string.
- * @returns Loading indicator, error message, or rendered CompanyCard.
+ * @returns Loading indicator, error message, or rendered CompanyCard with source badge.
  */
 export default function CompanyDetail({ ico }: { ico: string }) {
   const [data, setData] = useState<CompanyData | null>(null);
   const [status, setStatus] = useState<LoadStatus>("loading");
+  const [source, setSource] = useState<DataSource>("api");
 
   useEffect(() => {
     let cancelled = false;
-    fetchAres(ico)
-      .then((result) => {
+
+    async function load() {
+      const db = await getDb();
+
+      const cached = getCachedAres(db, ico);
+      if (cached) {
+        if (!cancelled) {
+          setData(cached);
+          setSource("cache");
+          setStatus("ok");
+        }
+        return;
+      }
+
+      try {
+        const result = await fetchAres(ico);
         if (cancelled) return;
+        saveAresCache(db, ico, result);
+        await saveDb();
         setData(result);
+        setSource("api");
         setStatus("ok");
-      })
-      .catch((err: unknown) => {
+      } catch (err) {
         if (cancelled) return;
         const httpStatus = (err as { status?: number }).status;
         setStatus(httpStatus === 404 ? "notfound" : "error");
-      });
+      }
+    }
+
+    load();
     return () => {
       cancelled = true;
     };
@@ -58,5 +82,13 @@ export default function CompanyDetail({ ico }: { ico: string }) {
 
   if (!data) return null;
 
-  return <CompanyCard data={data} />;
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <span>ARES data:</span>
+        <SourceBadge source={source} />
+      </div>
+      <CompanyCard data={data} />
+    </div>
+  );
 }
