@@ -6,7 +6,11 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import Image from "next/image";
 import L from "leaflet";
 import { getDb, saveDb } from "@/db/client";
-import { getCachedGeocoding, saveGeocodingCache, type Coords } from "@/db/queries";
+import {
+  getCachedGeocoding,
+  saveGeocodingCache,
+  type Coords,
+} from "@/db/queries";
 import { normalizeAddressKey } from "@/lib/address";
 import SourceBadge, { type DataSource } from "./SourceBadge";
 
@@ -79,7 +83,7 @@ export default function FirmaMap({ address }: { address: string }) {
     };
   }, [address]);
 
-  const tileApiKey = process.env.NEXT_PUBLIC_MAPY_API_KEY ?? "";
+  const tileApiKey = process.env.NEXT_PUBLIC_MAP_API_KEY ?? "";
   const tileUrl = `https://api.mapy.com/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${tileApiKey}`;
 
   if (status === "loading") {

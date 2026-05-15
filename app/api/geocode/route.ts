@@ -15,12 +15,18 @@ const MAPY_GEOCODE = "https://api.mapy.com/v1/geocode";
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("q")?.trim();
   if (!query) {
-    return Response.json({ error: "Missing query parameter q." }, { status: 400 });
+    return Response.json(
+      { error: "Missing query parameter q." },
+      { status: 400 },
+    );
   }
 
-  const apiKey = process.env.NEXT_PUBLIC_MAPY_API_KEY;
+  const apiKey = process.env.MAP_API_KEY;
   if (!apiKey) {
-    return Response.json({ error: "Geocoding not configured." }, { status: 503 });
+    return Response.json(
+      { error: "Geocoding not configured." },
+      { status: 503 },
+    );
   }
 
   const url = new URL(MAPY_GEOCODE);
