@@ -18,6 +18,14 @@ The application is designed for quickly verifying basic information about a Czec
 
 Both filenames and component names are to be written in CamelCase.
 
+## Naming non-component files
+
+If a file exports a single function, name the file after that function (camelCase). For example, a file exporting `validateIco` is named `validateIco.ts`.
+
+## TSDoc comments
+
+Every exported function must have a TSDoc comment (`/** … */`) with at minimum a one-line description and `@param` / `@returns` tags.
+
 ## Database and SQL queries
 
 If possible database related code should be in a "db" folder. sql-wasm-browser.wasm file is an exception.
