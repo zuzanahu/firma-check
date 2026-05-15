@@ -126,7 +126,7 @@ export default function FirmaMap({ address }: { address: string }) {
           href="https://mapy.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="absolute bottom-2 left-2 z-[1000]"
+          className="absolute bottom-2 left-2 z-1000"
         >
           <Image
             src="https://api.mapy.com/img/api/logo.svg"
