@@ -3,11 +3,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getDb, saveDb } from "@/db/client";
-import { listSavedCompanies, removeCompany, type SavedCompany } from "@/db/queries";
+import {
+  listSavedCompanies,
+  listCompaniesForExport,
+  removeCompany,
+  type SavedCompany,
+} from "@/db/queries";
+import { buildCsvContent, downloadCsv } from "@/lib/exportCsv";
 
 /**
  * Client island displaying the list of saved companies from local SQLite storage.
- * Allows removing individual companies from the list.
+ * Allows removing individual companies from the list and exporting them as CSV.
  *
  * @returns A table of saved companies or an empty-state message.
  */
@@ -21,6 +27,14 @@ export default function SavedList() {
       setLoaded(true);
     });
   }, []);
+
+  async function handleExport() {
+    const db = await getDb();
+    const rows = listCompaniesForExport(db);
+    const csv = buildCsvContent(rows);
+    const date = new Date().toISOString().slice(0, 10);
+    downloadCsv(csv, `firmy-${date}.csv`);
+  }
 
   async function handleRemove(ico: string) {
     const db = await getDb();
@@ -45,7 +59,16 @@ export default function SavedList() {
   }
 
   return (
-    <div className="overflow-x-auto">
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-end">
+        <button
+          onClick={handleExport}
+          className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800"
+        >
+          Exportovat CSV
+        </button>
+      </div>
+      <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-zinc-200 text-left text-zinc-500 dark:border-zinc-700 dark:text-zinc-400">
@@ -103,6 +126,7 @@ export default function SavedList() {
           ))}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }

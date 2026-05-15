@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getDb, saveDb } from "@/db/client";
 import { isCompanySaved, saveCompany, removeCompany } from "@/db/queries";
 import { getLegalFormLabel } from "@/lib/legalForms";
+import { buildAddressQuery, normalizeAddressKey } from "@/lib/address";
 import type { CompanyData } from "@/lib/ares";
 
 function resolveStatus(data: CompanyData): string {
@@ -53,6 +54,7 @@ export default function SaveButton({ data }: { data: CompanyData }) {
         status: resolveStatus(data),
         address: resolveAddress(data),
         vatId: data.vatId ?? null,
+        geocodingKey: normalizeAddressKey(buildAddressQuery(data.address)) || null,
       });
     }
     await saveDb();

@@ -1,5 +1,6 @@
 import type { Database } from "sql.js";
 import type { CompanyData } from "@/lib/ares";
+import { buildAddressQuery, normalizeAddressKey } from "@/lib/address";
 
 // ─── ARES cache ───────────────────────────────────────────────────────────────
 
@@ -104,21 +105,23 @@ export interface SavedCompany {
   address: string | null;
   vatId: string | null;
   savedAt: string;
+  /** Normalized geocoding cache key used to join with geocoding_cache for coordinates. */
+  geocodingKey: string | null;
 }
 
 const SQL_IS_SAVED = `SELECT 1 FROM saved_companies WHERE ico = :ico`;
 
 const SQL_SAVE = `
   INSERT OR REPLACE INTO saved_companies
-    (ico, name, legal_form, date_established, status, address, vat_id, saved_at)
+    (ico, name, legal_form, date_established, status, address, vat_id, saved_at, geocoding_key)
   VALUES
-    (:ico, :name, :legal_form, :date_established, :status, :address, :vat_id, :saved_at)
+    (:ico, :name, :legal_form, :date_established, :status, :address, :vat_id, :saved_at, :geocoding_key)
 `;
 
 const SQL_REMOVE = `DELETE FROM saved_companies WHERE ico = :ico`;
 
 const SQL_LIST = `
-  SELECT ico, name, legal_form, date_established, status, address, vat_id, saved_at
+  SELECT ico, name, legal_form, date_established, status, address, vat_id, saved_at, geocoding_key
   FROM saved_companies
   ORDER BY saved_at DESC
 `;
@@ -154,6 +157,7 @@ export function saveCompany(
     ":address": company.address,
     ":vat_id": company.vatId,
     ":saved_at": new Date().toISOString(),
+    ":geocoding_key": company.geocodingKey,
   });
 }
 
@@ -185,5 +189,109 @@ export function listSavedCompanies(db: Database): SavedCompany[] {
     address: row[5] as string | null,
     vatId: row[6] as string | null,
     savedAt: row[7] as string,
+    geocodingKey: row[8] as string | null,
+  }));
+}
+
+// ─── CSV export ───────────────────────────────────────────────────────────────
+
+/** Row shape returned by {@link listCompaniesForExport}. */
+export interface CompanyExportRow {
+  ico: string;
+  name: string;
+  legalForm: string | null;
+  status: string | null;
+  address: string | null;
+  dateEstablished: string | null;
+  savedAt: string;
+  /** Timestamp of the last ARES API fetch, or null if not in cache. */
+  lastVerifiedAt: string | null;
+  /** "API" if the data was freshly fetched when saved, "cache" if it was already cached, "" if unknown. */
+  dataSource: string;
+  lat: number | null;
+  lng: number | null;
+}
+
+const SQL_LIST_FOR_EXPORT = `
+  SELECT
+    s.ico,
+    s.name,
+    s.legal_form,
+    s.status,
+    s.address,
+    s.date_established,
+    s.saved_at,
+    a.fetched_at,
+    CASE
+      WHEN a.fetched_at IS NULL THEN ''
+      WHEN ABS(ROUND((JULIANDAY(s.saved_at) - JULIANDAY(a.fetched_at)) * 86400)) < 120 THEN 'API'
+      ELSE 'cache'
+    END AS data_source,
+    g.lat,
+    g.lng
+  FROM saved_companies s
+  LEFT JOIN ares_cache a ON a.ico = s.ico
+  LEFT JOIN geocoding_cache g ON g.address = s.geocoding_key
+  ORDER BY s.saved_at DESC
+`;
+
+const SQL_BACKFILL_SELECT = `
+  SELECT s.ico, a.data
+  FROM saved_companies s
+  JOIN ares_cache a ON a.ico = s.ico
+  WHERE s.geocoding_key IS NULL
+`;
+
+const SQL_BACKFILL_UPDATE = `UPDATE saved_companies SET geocoding_key = :key WHERE ico = :ico`;
+
+/**
+ * Backfills the geocoding_key column for saved companies that were stored before the column existed.
+ * Reads structured address data from ares_cache and recomputes the key in JavaScript.
+ *
+ * @param db - sql.js Database instance.
+ * @returns Number of rows updated.
+ */
+export function backfillGeocodingKeys(db: Database): number {
+  const result = db.exec(SQL_BACKFILL_SELECT);
+  if (!result.length || !result[0].values.length) return 0;
+
+  let count = 0;
+  for (const [ico, dataJson] of result[0].values) {
+    try {
+      const data = JSON.parse(dataJson as string) as CompanyData;
+      const key = normalizeAddressKey(buildAddressQuery(data.address));
+      if (key) {
+        db.run(SQL_BACKFILL_UPDATE, { ":key": key, ":ico": ico as string });
+        count++;
+      }
+    } catch {
+      // Skip malformed cache entries
+    }
+  }
+  return count;
+}
+
+/**
+ * Returns all saved companies enriched with ARES cache metadata and geocoordinates for CSV export.
+ * Coordinates are included on a best-effort basis and may be null if geocoding was never performed.
+ *
+ * @param db - sql.js Database instance.
+ * @returns Array of export rows, newest first.
+ */
+export function listCompaniesForExport(db: Database): CompanyExportRow[] {
+  const result = db.exec(SQL_LIST_FOR_EXPORT);
+  if (!result.length) return [];
+  return result[0].values.map((row) => ({
+    ico: row[0] as string,
+    name: row[1] as string,
+    legalForm: row[2] as string | null,
+    status: row[3] as string | null,
+    address: row[4] as string | null,
+    dateEstablished: row[5] as string | null,
+    savedAt: row[6] as string,
+    lastVerifiedAt: row[7] as string | null,
+    dataSource: row[8] as string,
+    lat: row[9] as number | null,
+    lng: row[10] as number | null,
   }));
 }

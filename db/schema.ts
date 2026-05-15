@@ -21,6 +21,15 @@ export const SQL_SCHEMA = `
     status           TEXT,
     address          TEXT,
     vat_id           TEXT,
-    saved_at         TEXT NOT NULL
+    saved_at         TEXT NOT NULL,
+    geocoding_key    TEXT
   );
 `;
+
+/**
+ * Incremental migrations applied after opening any existing database.
+ * Each statement is executed in a try/catch so already-applied migrations are silently skipped.
+ */
+export const SQL_MIGRATIONS = [
+  `ALTER TABLE saved_companies ADD COLUMN geocoding_key TEXT`,
+];

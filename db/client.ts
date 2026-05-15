@@ -1,5 +1,6 @@
 import initSqlJs, { type Database } from "sql.js";
-import { SQL_SCHEMA } from "./schema";
+import { SQL_SCHEMA, SQL_MIGRATIONS } from "./schema";
+import { backfillGeocodingKeys } from "./queries";
 
 const IDB_NAME = "firma-check";
 const IDB_STORE = "db";
@@ -53,6 +54,20 @@ export async function getDb(): Promise<Database> {
   } else {
     instance = new SQL.Database();
     instance.run(SQL_SCHEMA);
+  }
+
+  let dirty = !bytes;
+  for (const sql of SQL_MIGRATIONS) {
+    try {
+      instance.run(sql);
+      dirty = true;
+    } catch {
+      // Already applied — safe to ignore
+    }
+  }
+
+  const backfilled = backfillGeocodingKeys(instance);
+  if (dirty || backfilled > 0) {
     await saveDb();
   }
 
