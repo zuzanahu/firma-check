@@ -7,6 +7,7 @@ import { getDb, saveDb } from "@/db/client";
 import { getCachedAres, saveAresCache } from "@/db/queries";
 import { buildAddressQuery } from "@/lib/address";
 import CompanyCard from "./CompanyCard";
+import SaveButton from "./SaveButton";
 import SourceBadge, { type DataSource } from "./SourceBadge";
 
 const FirmaMap = dynamic(() => import("./FirmaMap"), { ssr: false });
@@ -96,6 +97,7 @@ export default function CompanyDetail({ ico }: { ico: string }) {
           <SourceBadge source={source} />
         </div>
         <CompanyCard data={data} />
+        <SaveButton data={data} />
       </div>
       {addressQuery && <FirmaMap address={addressQuery} />}
     </div>
