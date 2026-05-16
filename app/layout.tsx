@@ -17,6 +17,11 @@ export const metadata: Metadata = {
   description: "Rychlé ověření základních informací o české firmě podle IČO.",
 };
 
+/**
+ * Root layout wrapping every page with fonts, language, and global styles.
+ * @param children - Page content rendered inside the body.
+ * @returns Full HTML document shell.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{

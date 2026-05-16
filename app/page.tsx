@@ -1,6 +1,10 @@
 import Link from "next/link";
 import IcoForm from "@/app/components/IcoForm";
 
+/**
+ * Homepage with the IČO search form and a link to saved companies.
+ * @returns Landing page UI.
+ */
 export default function Home() {
   return (
     <div className="flex flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-950">

@@ -14,8 +14,7 @@ import {
 import { normalizeAddressKey } from "@/lib/address";
 import SourceBadge, { type DataSource } from "./SourceBadge";
 
-// Leaflet's default marker images break under webpack's asset hashing.
-// We serve the PNGs directly from /public/leaflet/ to avoid this.
+// Leaflet can't resolve its own assets under module bundlers; serve from /public/ for a stable URL.
 const markerIcon = L.icon({
   iconUrl: "/leaflet/marker-icon.png",
   iconRetinaUrl: "/leaflet/marker-icon-2x.png",

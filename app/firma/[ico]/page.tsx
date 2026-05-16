@@ -1,6 +1,11 @@
 import Link from "next/link";
 import CompanyDetail from "@/app/components/CompanyDetail";
 
+/**
+ * Company detail page — fetches and displays information for the given IČO.
+ * @param params - Route params promise resolving to `{ ico: string }`.
+ * @returns Page with company detail and a back link.
+ */
 export default async function FirmaPage({
   params,
 }: {

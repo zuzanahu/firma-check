@@ -3,14 +3,9 @@ import type { NextRequest } from "next/server";
 const MAPY_GEOCODE = "https://api.mapy.com/v1/geocode";
 
 /**
- * GET /api/geocode?q=<address>
- * Proxies the query to the Mapy.com Geocoding API.
- * A server-side proxy is used so the API key is not duplicated in client bundles
- * and so a single request path handles caching headers uniformly.
- * Returns { lat, lng } for the first result, or an error JSON with the status.
- *
- * @param req - Incoming request; must include the `q` search parameter.
- * @returns JSON with { lat: number, lng: number } or { error: string }.
+ * Proxies address geocoding to Mapy.com and returns coordinates.
+ * @param req - Incoming request with `q` search parameter.
+ * @returns JSON `{ lat, lng }` or `{ error }` on failure.
  */
 export async function GET(req: NextRequest) {
   const query = req.nextUrl.searchParams.get("q")?.trim();
