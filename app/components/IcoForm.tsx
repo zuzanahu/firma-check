@@ -1,10 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { validateIco } from "@/lib/validateIco";
-
-type FormState = { error: string | null };
 
 /**
  * Form for entering a Czech company ID (IČO).
@@ -12,20 +10,22 @@ type FormState = { error: string | null };
  */
 export default function IcoForm() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
-  const [state, formAction, pending] = useActionState(
-    async (_prev: FormState, formData: FormData): Promise<FormState> => {
-      const ico = (formData.get("ico") as string) ?? "";
-      const result = validateIco(ico);
-      if (!result.valid) return { error: result.error };
-      router.push(`/firma/${result.ico}`);
-      return { error: null };
-    },
-    { error: null },
-  );
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const ico = (new FormData(e.currentTarget).get("ico") as string) ?? "";
+    const result = validateIco(ico);
+    if (!result.valid) {
+      setError(result.error);
+      return;
+    }
+    setError(null);
+    router.push(`/firma/${result.ico}`);
+  }
 
   return (
-    <form action={formAction} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <label
           htmlFor="ico"
@@ -42,18 +42,17 @@ export default function IcoForm() {
           placeholder="např. 27074358"
           className="w-full rounded-lg border border-zinc-300 bg-white px-4 py-2.5 text-zinc-900 placeholder:text-zinc-400 focus:border-zinc-500 focus:outline-none dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
         />
-        {state.error && (
+        {error && (
           <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-            {state.error}
+            {error}
           </p>
         )}
       </div>
       <button
         type="submit"
-        disabled={pending}
-        className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+        className="rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
       >
-        {pending ? "Ověřuji…" : "Ověřit firmu"}
+        Ověřit firmu
       </button>
     </form>
   );
