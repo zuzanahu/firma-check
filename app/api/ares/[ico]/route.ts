@@ -8,14 +8,14 @@ const ARES_BASE = "https://ares.gov.cz/ekonomicke-subjekty-v-be/rest";
  * Returns 404 when ARES reports the entity does not exist.
  *
  * @param _req - Incoming Next.js request (unused, kept for signature compatibility).
- * @param params - Route params promise resolving to `{ ico: string }`.
+ * @param ctx - Route context with params resolving to `{ ico: string }`.
  * @returns ARES JSON response or an error JSON with `{ error: string }`.
  */
 export async function GET(
   _req: NextRequest,
-  { params }: { params: Promise<{ ico: string }> },
+  ctx: RouteContext<"/api/ares/[ico]">,
 ) {
-  const { ico } = await params;
+  const { ico } = await ctx.params;
 
   const aresRes = await fetch(`${ARES_BASE}/ekonomicke-subjekty/${ico}`, {
     headers: { Accept: "application/json" },
