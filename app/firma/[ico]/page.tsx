@@ -4,14 +4,19 @@ import CompanyDetail from "@/app/components/CompanyDetail";
 /**
  * Company detail page — fetches and displays information for the given IČO.
  * @param params - Route params promise resolving to `{ ico: string }`.
+ * @param searchParams - Query params promise; `nazev` carries the optional name to verify.
  * @returns Page with company detail and a back link.
  */
 export default async function FirmaPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ ico: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const { ico } = await params;
+  const { nazev } = await searchParams;
+  const enteredName = typeof nazev === "string" ? nazev : undefined;
 
   return (
     <div className="min-h-full bg-zinc-50 dark:bg-zinc-950">
@@ -27,7 +32,7 @@ export default async function FirmaPage({
           <h1 className="mb-6 text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             Detail firmy
           </h1>
-          <CompanyDetail ico={ico} />
+          <CompanyDetail ico={ico} enteredName={enteredName} />
         </div>
       </div>
     </div>
