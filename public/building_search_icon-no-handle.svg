@@ -1,0 +1,110 @@
+<svg width="100%" viewBox="0 0 680 680" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Property search icon</title>
+  <desc>Premium magnifying glass with buildings and checkmark badge</desc>
+  <defs>
+    <clipPath id="lc"><circle cx="285" cy="268" r="182"/></clipPath>
+    <linearGradient id="ringG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1C3FAA"/><stop offset="100%" stop-color="#0B1F5C"/>
+    </linearGradient>
+    <linearGradient id="lensG" x1="20%" y1="10%" x2="80%" y2="90%">
+      <stop offset="0%" stop-color="#F0F5FF"/><stop offset="100%" stop-color="#D8E6F8"/>
+    </linearGradient>
+    <linearGradient id="skyG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C8DCF5"/><stop offset="100%" stop-color="#E8F2FF"/>
+    </linearGradient>
+    <linearGradient id="b1G" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0E2470"/><stop offset="100%" stop-color="#1A3899"/>
+    </linearGradient>
+    <linearGradient id="b2G" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#132D8A"/><stop offset="100%" stop-color="#2048B8"/>
+    </linearGradient>
+    <linearGradient id="lobbyG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#90C0E8"/><stop offset="100%" stop-color="#5E8EC8"/>
+    </linearGradient>
+    <linearGradient id="badgeG" x1="20%" y1="20%" x2="80%" y2="80%">
+      <stop offset="0%" stop-color="#34D877"/><stop offset="100%" stop-color="#15A050"/>
+    </linearGradient>
+    <linearGradient id="groundG" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#B8CCEC"/><stop offset="100%" stop-color="#9AB0D8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer ring -->
+  <circle cx="289" cy="272" r="218" fill="#060F35" opacity="0.16"/>
+  <circle cx="285" cy="268" r="216" fill="url(#ringG)"/>
+  <circle cx="285" cy="268" r="207" fill="none" stroke="#4A72E8" stroke-width="2.5" opacity="0.3"/>
+  <circle cx="285" cy="268" r="199" fill="none" stroke="#040E38" stroke-width="2" opacity="0.22"/>
+  <circle cx="285" cy="268" r="192" fill="url(#lensG)"/>
+
+  <!-- Sky + ground -->
+  <rect x="93" y="76" width="384" height="384" fill="url(#skyG)" clip-path="url(#lc)"/>
+  <rect x="93" y="384" width="384" height="84" fill="url(#groundG)" clip-path="url(#lc)"/>
+  <rect x="93" y="382" width="384" height="5" fill="#7A9EC0" clip-path="url(#lc)"/>
+
+  <!-- Left building -->
+  <rect x="144" y="206" width="108" height="150" rx="3" fill="url(#b1G)" clip-path="url(#lc)"/>
+  <rect x="141" y="199" width="114" height="10" rx="2" fill="#0A1B58" clip-path="url(#lc)"/>
+  <rect x="175" y="182" width="8" height="20" rx="1" fill="#0A1B58" clip-path="url(#lc)"/>
+  <line x1="179" y1="182" x2="179" y2="162" stroke="#0A1B58" stroke-width="3" stroke-linecap="round" clip-path="url(#lc)"/>
+  <circle cx="179" cy="160" r="4" fill="#1A3080" clip-path="url(#lc)"/>
+
+  <!-- Left building windows -->
+  <rect x="164" y="216" width="22" height="17" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="200" y="216" width="22" height="17" rx="2" fill="#AFC8EE" clip-path="url(#lc)"/>
+  <rect x="164" y="243" width="22" height="14" rx="2" fill="#AABEE8" clip-path="url(#lc)"/>
+  <rect x="200" y="243" width="22" height="14" rx="2" fill="#C0D6F5" clip-path="url(#lc)"/>
+  <rect x="164" y="268" width="22" height="14" rx="2" fill="#C0D6F5" clip-path="url(#lc)"/>
+  <rect x="200" y="268" width="26" height="14" rx="2" fill="#D0E4FF" clip-path="url(#lc)"/>
+  <rect x="164" y="293" width="22" height="14" rx="2" fill="#AFC8EE" clip-path="url(#lc)"/>
+  <rect x="200" y="293" width="22" height="14" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="164" y="318" width="22" height="14" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="200" y="318" width="22" height="14" rx="2" fill="#AABEE8" clip-path="url(#lc)"/>
+
+  <!-- Left building lobby -->
+  <rect x="144" y="354" width="108" height="32" rx="0" fill="#0A1A5A" clip-path="url(#lc)"/>
+  <rect x="148" y="356" width="26" height="28" rx="1" fill="url(#lobbyG)" clip-path="url(#lc)"/>
+  <rect x="178" y="356" width="40" height="28" rx="1" fill="url(#lobbyG)" opacity="0.9" clip-path="url(#lc)"/>
+  <rect x="222" y="356" width="28" height="28" rx="1" fill="url(#lobbyG)" clip-path="url(#lc)"/>
+  <line x1="176" y1="356" x2="176" y2="384" stroke="#0A1A5A" stroke-width="2" clip-path="url(#lc)"/>
+  <line x1="220" y1="356" x2="220" y2="384" stroke="#0A1A5A" stroke-width="2" clip-path="url(#lc)"/>
+  <rect x="144" y="350" width="108" height="8" fill="#0A1B58" clip-path="url(#lc)"/>
+
+  <!-- Right building -->
+  <rect x="258" y="148" width="126" height="208" rx="3" fill="url(#b2G)" clip-path="url(#lc)"/>
+  <rect x="255" y="141" width="132" height="11" rx="2" fill="#0E2068" clip-path="url(#lc)"/>
+  <rect x="270" y="122" width="102" height="24" rx="2" fill="#112478" clip-path="url(#lc)"/>
+  <rect x="316" y="107" width="12" height="19" rx="1" fill="#0E2068" clip-path="url(#lc)"/>
+  <line x1="322" y1="107" x2="322" y2="86" stroke="#0E2068" stroke-width="4" stroke-linecap="round" clip-path="url(#lc)"/>
+  <circle cx="322" cy="84" r="5" fill="#2248C0" clip-path="url(#lc)"/>
+
+  <!-- Right building windows -->
+  <rect x="278" y="160" width="26" height="18" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="320" y="160" width="26" height="18" rx="2" fill="#AFC8EE" clip-path="url(#lc)"/>
+  <rect x="278" y="189" width="26" height="14" rx="2" fill="#AFC8EE" clip-path="url(#lc)"/>
+  <rect x="320" y="189" width="26" height="17" rx="2" fill="#C0D6F5" clip-path="url(#lc)"/>
+  <rect x="278" y="216" width="26" height="16" rx="2" fill="#C0D6F5" clip-path="url(#lc)"/>
+  <rect x="320" y="216" width="26" height="16" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="278" y="244" width="26" height="14" rx="2" fill="#AFC8EE" clip-path="url(#lc)"/>
+  <rect x="320" y="244" width="30" height="14" rx="2" fill="#D0E4FF" clip-path="url(#lc)"/>
+  <rect x="278" y="269" width="26" height="16" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="320" y="269" width="26" height="16" rx="2" fill="#AFC8EE" clip-path="url(#lc)"/>
+  <rect x="278" y="296" width="26" height="14" rx="2" fill="#AABEE8" clip-path="url(#lc)"/>
+  <rect x="320" y="296" width="26" height="14" rx="2" fill="#C0D6F5" clip-path="url(#lc)"/>
+  <rect x="278" y="321" width="26" height="16" rx="2" fill="#C6DCF8" clip-path="url(#lc)"/>
+  <rect x="320" y="321" width="26" height="16" rx="2" fill="#AABEE8" clip-path="url(#lc)"/>
+
+  <!-- Right building lobby -->
+  <rect x="258" y="354" width="126" height="32" rx="0" fill="#0E1E68" clip-path="url(#lc)"/>
+  <rect x="262" y="356" width="46" height="28" rx="1" fill="url(#lobbyG)" clip-path="url(#lc)"/>
+  <rect x="312" y="356" width="18" height="28" rx="1" fill="url(#lobbyG)" opacity="0.7" clip-path="url(#lc)"/>
+  <rect x="334" y="356" width="46" height="28" rx="1" fill="url(#lobbyG)" clip-path="url(#lc)"/>
+  <line x1="310" y1="356" x2="310" y2="384" stroke="#0E1E68" stroke-width="2" clip-path="url(#lc)"/>
+  <line x1="332" y1="356" x2="332" y2="384" stroke="#0E1E68" stroke-width="2" clip-path="url(#lc)"/>
+  <rect x="258" y="350" width="126" height="8" fill="#0E2068" clip-path="url(#lc)"/>
+
+  <!-- Lens sheen -->
+  <path d="M148,158 Q184,106 255,122" fill="none" stroke="white" stroke-width="18" stroke-linecap="round" opacity="0.12" clip-path="url(#lc)"/>
+  <circle cx="285" cy="268" r="191" fill="none" stroke="white" stroke-width="1.5" opacity="0.16"/>
+
+
+</svg>

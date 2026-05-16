@@ -20,8 +20,8 @@ export default function NavBar() {
           <Image
             src="/building_search_icon_v5.svg"
             alt="Firma Check"
-            width={44}
-            height={44}
+            width={56}
+            height={56}
             priority
           />
           <span className="text-xl font-bold tracking-tight" translate="no">

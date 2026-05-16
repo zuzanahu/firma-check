@@ -16,10 +16,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Firma Check",
   description: "Rychlé ověření základních informací o české firmě podle IČO.",
-  icons: {
-    icon: "/building_search_icon_v5.svg",
-    apple: "/building_search_icon_v5.svg",
-  },
 };
 
 /**
