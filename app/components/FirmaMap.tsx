@@ -12,7 +12,7 @@ import {
   type Coords,
 } from "@/db/queries";
 import { normalizeAddressKey } from "@/lib/address";
-import SourceBadge, { type DataSource } from "./SourceBadge";
+import { type DataSource } from "./SourceBadge";
 
 // Leaflet can't resolve its own assets under module bundlers; serve from /public/ for a stable URL.
 const markerIcon = L.icon({
@@ -38,9 +38,16 @@ async function fetchCoords(address: string): Promise<Coords> {
  * Checks the local SQLite geocoding cache before calling the Mapy.com API.
  *
  * @param address - Human-readable address string used as the geocoding query.
- * @returns Source badge, map with marker, coordinates, and a link to Mapy.com.
+ * @param onSourceChangeAction - Optional callback fired once the data source is resolved.
+ * @returns Map with marker, coordinates, and a link to Mapy.com.
  */
-export default function FirmaMap({ address }: { address: string }) {
+export default function FirmaMap({
+  address,
+  onSourceChangeAction,
+}: {
+  address: string;
+  onSourceChangeAction?: (source: DataSource) => void;
+}) {
   const [coords, setCoords] = useState<Coords | null>(null);
   const [status, setStatus] = useState<MapStatus>("loading");
   const [source, setSource] = useState<DataSource>("api");
@@ -58,6 +65,7 @@ export default function FirmaMap({ address }: { address: string }) {
           setCoords(cached);
           setSource("cache");
           setStatus("ok");
+          onSourceChangeAction?.("cache");
         }
         return;
       }
@@ -70,6 +78,7 @@ export default function FirmaMap({ address }: { address: string }) {
         setCoords(result);
         setSource("api");
         setStatus("ok");
+        onSourceChangeAction?.("api");
       } catch (err) {
         console.error("[FirmaMap] Geocoding failed:", err);
         if (!cancelled) setStatus("error");
@@ -80,14 +89,14 @@ export default function FirmaMap({ address }: { address: string }) {
     return () => {
       cancelled = true;
     };
-  }, [address]);
+  }, [address, onSourceChangeAction]);
 
   const tileApiKey = process.env.NEXT_PUBLIC_MAP_API_KEY ?? "";
   const tileUrl = `https://api.mapy.com/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${tileApiKey}`;
 
   if (status === "loading") {
     return (
-      <p className="text-sm text-zinc-500 dark:text-zinc-400">Načítám mapu…</p>
+      <p aria-live="polite" className="text-sm text-zinc-500 dark:text-zinc-400">Načítám mapu…</p>
     );
   }
 
@@ -103,10 +112,6 @@ export default function FirmaMap({ address }: { address: string }) {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-        <span>Geocoding:</span>
-        <SourceBadge source={source} />
-      </div>
       <div className="relative">
         <MapContainer
           center={[coords.lat, coords.lng]}
@@ -144,7 +149,7 @@ export default function FirmaMap({ address }: { address: string }) {
           href={mapyLink}
           target="_blank"
           rel="noopener noreferrer"
-          className="underline-offset-2 hover:text-zinc-900 hover:underline dark:hover:text-zinc-100"
+          className="rounded-sm underline-offset-2 hover:text-zinc-900 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-1 dark:hover:text-zinc-100 dark:focus-visible:ring-zinc-400"
         >
           Otevřít v Mapy.com →
         </a>

@@ -1,11 +1,10 @@
-import Link from "next/link";
 import CompanyDetail from "@/app/components/CompanyDetail";
 
 /**
  * Company detail page — fetches and displays information for the given IČO.
  * @param params - Route params promise resolving to `{ ico: string }`.
  * @param searchParams - Query params promise; `nazev` carries the optional name to verify.
- * @returns Page with company detail and a back link.
+ * @returns Page with company detail card.
  */
 export default async function FirmaPage({
   params,
@@ -19,19 +18,9 @@ export default async function FirmaPage({
   const enteredName = typeof nazev === "string" ? nazev : undefined;
 
   return (
-    <div className="min-h-full bg-zinc-50 dark:bg-zinc-950">
+    <div id="main-content" className="flex-1 bg-zinc-50 dark:bg-zinc-950">
       <div className="mx-auto max-w-2xl px-4 py-10">
-        <Link
-          href="/"
-          className="mb-6 inline-block text-sm text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
-        >
-          ← Zpět
-        </Link>
-
         <div className="rounded-2xl bg-white p-6 shadow-sm dark:bg-zinc-900">
-          <h1 className="mb-6 text-xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-            Detail firmy
-          </h1>
           <CompanyDetail ico={ico} enteredName={enteredName} />
         </div>
       </div>
