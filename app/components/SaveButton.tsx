@@ -66,10 +66,11 @@ export default function SaveButton({ data }: { data: CompanyData }) {
     <button
       onClick={toggle}
       disabled={pending}
-      className={`rounded-lg px-6 py-2.5 text-sm font-medium transition-colors disabled:opacity-50 ${
+      aria-pressed={saved}
+      className={`rounded-lg px-6 py-2.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 ${
         saved
-          ? "bg-red-50 text-red-700 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
-          : "bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
+          ? "bg-red-50 text-red-700 hover:bg-red-100 focus-visible:ring-red-500 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40"
+          : "bg-zinc-900 text-white hover:bg-zinc-700 focus-visible:ring-zinc-500 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300 dark:focus-visible:ring-zinc-400"
       }`}
     >
       {saved ? "Odebrat z uložených" : "Uložit firmu"}
