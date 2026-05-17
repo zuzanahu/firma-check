@@ -34,8 +34,8 @@ describe("GET /api/geocode", () => {
     expect(res.status).toBe(400);
   });
 
-  it("returns 503 when MAP_API_KEY is not set", async () => {
-    vi.stubEnv("MAP_API_KEY", "");
+  it("returns 503 when GEOCODE_API_KEY is not set", async () => {
+    vi.stubEnv("GEOCODE_API_KEY", "");
     const res = await GET(makeReq("?q=Praha"));
     expect(res.status).toBe(503);
     const body = await res.json();
@@ -43,7 +43,7 @@ describe("GET /api/geocode", () => {
   });
 
   it("returns 200 with lat/lng on success", async () => {
-    vi.stubEnv("MAP_API_KEY", "test-key");
+    vi.stubEnv("GEOCODE_API_KEY", "test-key");
     mockFetch.mockResolvedValue(
       new Response(JSON.stringify(MAPY_SUCCESS), { status: 200 }),
     );
@@ -55,7 +55,7 @@ describe("GET /api/geocode", () => {
   });
 
   it("returns 404 when Mapy.com returns no results", async () => {
-    vi.stubEnv("MAP_API_KEY", "test-key");
+    vi.stubEnv("GEOCODE_API_KEY", "test-key");
     mockFetch.mockResolvedValue(
       new Response(JSON.stringify({ items: [] }), { status: 200 }),
     );
@@ -67,7 +67,7 @@ describe("GET /api/geocode", () => {
   });
 
   it("returns 502 when Mapy.com returns non-OK status", async () => {
-    vi.stubEnv("MAP_API_KEY", "test-key");
+    vi.stubEnv("GEOCODE_API_KEY", "test-key");
     mockFetch.mockResolvedValue(new Response(null, { status: 429 }));
 
     const res = await GET(makeReq("?q=Praha"));
@@ -77,7 +77,7 @@ describe("GET /api/geocode", () => {
   });
 
   it("includes the API key in the upstream request", async () => {
-    vi.stubEnv("MAP_API_KEY", "secret-key-xyz");
+    vi.stubEnv("GEOCODE_API_KEY", "secret-key-xyz");
     mockFetch.mockResolvedValue(
       new Response(JSON.stringify(MAPY_SUCCESS), { status: 200 }),
     );
@@ -89,7 +89,7 @@ describe("GET /api/geocode", () => {
   });
 
   it("constrains upstream search to Czech Republic", async () => {
-    vi.stubEnv("MAP_API_KEY", "test-key");
+    vi.stubEnv("GEOCODE_API_KEY", "test-key");
     mockFetch.mockResolvedValue(
       new Response(JSON.stringify(MAPY_SUCCESS), { status: 200 }),
     );

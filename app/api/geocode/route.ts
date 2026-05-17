@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
     );
   }
 
-  const apiKey = process.env.MAP_API_KEY;
+  const apiKey = process.env.GEOCODE_API_KEY;
   if (!apiKey) {
     return Response.json(
       { error: "Geocoding not configured." },
